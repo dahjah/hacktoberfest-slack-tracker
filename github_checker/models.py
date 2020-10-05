@@ -72,10 +72,12 @@ class UserConfig(models.Model):
         qualifiers = {"author": self.github_user.username,
                       "type": "pr"}
         q_string = "+".join([f"{key}:{value}" for key, value in qualifiers.items()])
-        if start_date:
+        if start_date and not end_date:
             q_string = q_string+f"+created:>={start_date.date()}"
-        if end_date:
+        if end_date and not start_date:
             q_string = q_string+f"+created:<={end_date.date()}"
+        if start_date and end_date:
+            q_string = q_string+f"+created:{start_date.date()}..{end_date.date()}"
         auth = (settings.GITHUB_AUTH.get("username"),
                 settings.GITHUB_AUTH.get("token"))
         if self.github_user.auth_token:
