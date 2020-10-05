@@ -13,17 +13,21 @@ class GithubUserConfig(models.Model):
     avatar = models.CharField(max_length=255, blank=True, null=True)
     gravatar_id = models.CharField(max_length=255, blank=True, null=True)
     auth_token = models.CharField(max_length=255, blank=True, null=True)
+    name = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return self.username
 
 
-class NotificationSettings(models.Model):
+class NotificationSetting(models.Model):
     name = models.CharField(max_length=200, unique=True)
-    range_to_look_at = models.CharField(max_length=255)
+    start_date = models.CharField(max_length=255)
+    end_date = models.CharField(max_length=255, blank=True, null=True)
     count_quota = models.IntegerField(blank=True, null=True)
     message = models.TextField()
-
+    channel = models.CharField(max_length=255)
+    bot_name = models.CharField(max_length=255)
+    bot_avatar = models.CharField(max_length=255)
 
 
 class SlackOrg(models.Model):
@@ -40,42 +44,46 @@ class SlackOrg(models.Model):
         verbose_name_plural = 'Authorized Company Slack Accounts'
 
 
-class SlackUserConfig(models.Model):
-    email = models.CharField(max_length=255)
+class ConnectionUserConfig(models.Model):
+    slack_name = models.CharField(max_length=255)
     slack_id = models.CharField(max_length=255)
     slack_org = models.ForeignKey(SlackOrg, on_delete=models.CASCADE)
-    notification_settings = models.ManyToManyField(NotificationSettings, blank=True)
+    notification_settings = models.ForeignKey(NotificationSetting, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.email
+        return self.slack_name
 
 
 class UserConfig(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
     watch_for_pull_requests = models.BooleanField(default=False)
     notify_count_in_slack = models.BooleanField(default=False)
     github_user = models.ForeignKey(GithubUserConfig, on_delete=models.CASCADE)
-    slack_user = models.ForeignKey(SlackUserConfig, on_delete=models.CASCADE)
+    conn_configs = models.ManyToManyField(ConnectionUserConfig)
+
+    class Meta:
+        unique_together = ('name', 'github_user',)
 
     def __str__(self):
         return self.name
 
     def get_pull_requests_created(self, start_date=None, end_date=None):
         base_url = "https://api.github.com/search/issues"
-        params = {}
         qualifiers = {"author": self.github_user.username,
                       "type": "pr"}
-        if start_date:
-            qualifiers["created":f">={start_date}"]
-        if end_date:
-            qualifiers["created":f"<={end_date}"]
         q_string = "+".join([f"{key}:{value}" for key, value in qualifiers.items()])
-        params["q"] = q_string
+        if start_date:
+            q_string = q_string+f"+created:>={start_date.date()}"
+        if end_date:
+            q_string = q_string+f"+created:<={end_date.date()}"
         auth = (settings.GITHUB_AUTH.get("username"),
                 settings.GITHUB_AUTH.get("token"))
         if self.github_user.auth_token:
             auth = (self.github_user.username, self.github_user.auth_token)
+        print(f"{base_url}?q={q_string}")
+        print(auth)
         resp = requests.get(f"{base_url}?q={q_string}", auth=auth)
+        print(resp.json())
         resp_json = resp.json()
         pr_records = []
         new_records = []

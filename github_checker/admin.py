@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import (PullRequest, GithubUserConfig,
-                     SlackOrg, SlackUserConfig,
-                     UserConfig, NotificationSettings)
+                     SlackOrg, ConnectionUserConfig,
+                     UserConfig, NotificationSetting)
 
 # Register your models here.
 @admin.register(PullRequest)
@@ -16,14 +16,14 @@ class GithubUserConfigAdmin(admin.ModelAdmin):
 class SlackOrgAdmin(admin.ModelAdmin):
     pass
 
-@admin.register(SlackUserConfig)
-class SlackUserConfigAdmin(admin.ModelAdmin):
+@admin.register(ConnectionUserConfig)
+class ConnectionUserConfigAdmin(admin.ModelAdmin):
     pass
 
 @admin.register(UserConfig)
 class UserConfigAdmin(admin.ModelAdmin):
     pass
 
-@admin.register(NotificationSettings)
+@admin.register(NotificationSetting)
 class NotificationSettingsAdmin(admin.ModelAdmin):
     pass
