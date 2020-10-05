@@ -31,10 +31,7 @@ class RegisteredUsersViewset(viewsets.ModelViewSet):
         notif_settings = NotificationSetting.objects.all()[0]
         github_details = get_user_github(text.strip())
         if not github_details:
-            requests.post(resp_url, json={"response_type": "ephemeral",
-                                          "text": "Unable to find Github user!"
-                                          })
-            return Response()  # Respond 200 so slack doesn't report error
+            return Response(f"Unable to find github user: {text}")  # Respond 200 so slack doesn't report error
         print(github_details)
         github_user, gh_created = GithubUserConfig.objects.get_or_create(
             id=github_details.get("id"), defaults=github_details)
@@ -57,7 +54,9 @@ class RegisteredUsersViewset(viewsets.ModelViewSet):
         check_user_and_update(user_config)
         requests.post(resp_url, {"response_type": "ephemeral",
                                  "text": "Successfully Subscribed!"})
-        return Response()
+        return Response({"response_type": "ephemeral",
+                         "text": f"<@{user_id}> successfully registered {text} for tracking!"
+                         })
 
     @action(detail=False, methods=['post'], url_path='edit')
     @csrf_exempt
