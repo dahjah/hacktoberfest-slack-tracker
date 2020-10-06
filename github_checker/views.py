@@ -12,6 +12,20 @@ import requests
 
 # Create your views here.
 
+class SlackViewset(viewsets.ModelViewSet):
+
+    @action(detail=False, methods=['post'], url_path="interact")
+    def interact(self, request):
+        print("Interact called!")
+        print(request)
+        print(request.POST)
+
+    @action(detail=False, methods=['post'], url_path="oauth")
+    def oauth(self, request):
+        print("Oauth called!")
+        print(request)
+        print(request.POST)
+
 
 class RegisteredUsersViewset(viewsets.ModelViewSet):
 
