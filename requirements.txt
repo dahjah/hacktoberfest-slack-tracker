@@ -3,14 +3,17 @@ asgiref==3.2.10
 backcall==0.2.0
 CacheControl==0.12.6
 certifi==2019.11.28
+cffi==1.14.3
 chardet==3.0.4
 colorama==0.4.3
 contextlib2==0.6.0
+cryptography==3.1.1
 decorator==4.4.2
 distlib==0.3.0
 distro==1.4.0
 dj-database-url==0.5.0
 Django==3.1.2
+django-extensions==3.0.9
 djangorestframework==3.12.1
 gunicorn==20.0.4
 html5lib==1.0.1
@@ -30,7 +33,9 @@ progress==1.5
 prompt-toolkit==3.0.7
 psycopg2==2.8.6
 ptyprocess==0.6.0
+pycparser==2.20
 Pygments==2.7.1
+pyOpenSSL==19.1.0
 pyparsing==2.4.6
 python-dateutil==2.8.1
 pytoml==0.1.21
@@ -43,4 +48,5 @@ traitlets==5.0.4
 urllib3==1.25.8
 wcwidth==0.2.5
 webencodings==0.5.1
+Werkzeug==1.0.1
 whitenoise==5.2.0
