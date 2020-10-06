@@ -14,13 +14,17 @@ import requests
 
 class SlackViewset(viewsets.ModelViewSet):
 
+    queryset = SlackOrg.objects.all()
+
     @action(detail=False, methods=['post'], url_path="interact")
+    @csrf_exempt
     def interact(self, request):
         print("Interact called!")
         print(request)
         print(request.POST)
 
     @action(detail=False, methods=['post'], url_path="oauth")
+    @csrf_exempt
     def oauth(self, request):
         print("Oauth called!")
         print(request)
