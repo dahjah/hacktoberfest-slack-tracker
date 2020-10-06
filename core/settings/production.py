@@ -20,3 +20,7 @@ GITHUB_AUTH = {
                "username": os.environ.get("GITHUB_USER"),
                "token": os.environ.get("GITHUB_TOKEN")
                }
+
+SLACK_CLIENT_ID = os.environ.get("SLACK_CLIENT_ID")
+SLACK_CLIENT_SECRET = os.environ.get("SLACK_CLIENT_SECRET")
+SLACK_CLIENT_REDIRECT_URI = os.environ.get("SLACK_CLIENT_REDIRECT_URI")

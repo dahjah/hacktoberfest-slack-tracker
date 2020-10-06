@@ -11,4 +11,4 @@ class SlackSerializer(serializers.HyperlinkedModelSerializer):
 class UserConfigSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = UserConfig
-        fields = ['name', 'watch_for_pull_requests', 'notify_count_in_slack']
+        fields = ['name']
